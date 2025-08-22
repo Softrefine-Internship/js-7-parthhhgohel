@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="icon" href="" />
+    <link rel="icon" href="./src/img/GK-Logo.png"/>
     <link rel="stylesheet" href="./src/css/styles.css" />
     <script defer src="./src/js/script.js"></script>
 
@@ -21,16 +21,18 @@
   <body>
     <div class="container">
       <!-- Customization Screen -->
+      <!-- Loader -->
+       <!-- overlay -->
+      <div class="overlay hidden">
+        <div class="loader"></div>
+      </div>
+
       <section class="screen-container">
         <div class="custom-container">
           <h1 class="quiz-title-h1">GK Quiz</h1>
           <h3 class="quiz-title-h3">Customize Your Quiz</h3>
           <!-- Form -->
           <form id="quiz-form">
-
-            <!-- Loader -->
-            <!-- <div class="loader"></div> -->
-
             <div class="form-field">
               <label for="num-questions">Number of Questions:</label>
               <input
@@ -65,7 +67,7 @@
               </select>
             </div>
 
-            <button id="start-quiz" type="submit">Start Quiz</button>
+            <button id="start-quiz" class="btn" type="submit">Start Quiz</button>
           </form>
         </div>
 
@@ -73,21 +75,17 @@
         <div class="quiz-container hidden">
           <h1 class="quiz-title-h1">GK Quiz</h1>
           <h3 class="quiz-title-h3">Quiz Questions</h3>
-
-            <div class="tot-qu__score">
-                <div>
-                    <h4 class="quiz-title-h4 question-number"></h4>
-                    <h4 class="quiz-title-h4 total-questions"></h4>
-                </div>
-                <h4 class="quiz-title-h4 score">Score is 0</h4>
-            </div>
-            <div class="que-title">
-                <p class="question" id="question"></p>
-            </div>
+          <div class="que-title">
+              <p class="question" id="question"></p>
+          </div>
           <div class="options-container" id="options-container"></div>
+          <div class="tot-qu__score">
+            <h5 class="quiz-title-h5 total-questions"></h5>
+            <h5 class="quiz-title-h5 score">Score : 0</h5>
+          </div>
           <div class="form-button">
-              <button class="" id="quit-quiz">Quit Quiz</button>
-              <button class="" id="next-question">Next Question</button>
+              <button class="btn" id="quit-quiz">Quit Quiz</button>
+              <button class="btn" id="next-question">Next Question</button>
           </div>
         </div>
 
@@ -96,9 +94,9 @@
         <div class="results-container hidden">
           <h1 class="quiz-title-h1">GK Quiz</h1>
           <h3 class="quiz-title-h3">Results</h3>
-          <p class="score"></p>
+          <p class="result_score quiz-title-h3"></p>
           <div class="form-button">
-            <button class="" id="play-again">Play Again</button>
+            <button class="btn" id="play-again">Play Again</button>
           </div>
         </div>
       </section>

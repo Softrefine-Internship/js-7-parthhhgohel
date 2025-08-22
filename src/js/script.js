@@ -27,7 +27,8 @@ const totalQuestions = document.querySelector(".total-questions");
 const questionTitle = document.querySelector(".question");
 const optionsContainer = document.querySelector(".options-container");
 const correctAnswer = document.querySelector(".correct-answer");
-
+const resultScore = document.querySelector(".result_score");
+const overlay = document.querySelector(".overlay");
 
 // variables
 let currentQuestion = 0;
@@ -37,17 +38,18 @@ let category;
 let difficulty;
 let type;
 
-
 // functions
-
 const fetchCategories = async function () {
+    overlay.classList.remove('hidden');
     try{
         const response = await fetch(`https://opentdb.com/api_category.php`);
         const data = await response.json();
+        overlay.classList.add('hidden');
         return data.trivia_categories;
     }
     catch(error){
         console.log(error);
+        overlay.classList.add('hidden');
         showAlert('error', 'Failed to fetch categories. Please try again.');
     }
 }
@@ -73,24 +75,26 @@ const dropdownCategories = async () => {
 }
 
 const fetchQuestions = async function () {
+    overlay.classList.remove('hidden');
     try {
         console.log('Fetching questions with:', numQuestions, category, difficulty, type);
         const response = await fetch(`https://opentdb.com/api.php?amount=${numQuestions}&category=${category}&difficulty=${difficulty}&type=${type}`);
         const data = await response.json();
         console.log(data.results);
+        overlay.classList.add('hidden');
         return data.results;
     } catch (error) {
         console.log(error);
+        overlay.classList.add('hidden');
         showAlert('error', 'Error: Something went wrong.');
     }
 };
 
 const displayQuestion = function (question) {
     let options = [...question.incorrect_answers, question.correct_answer];
-    questionNumber.textContent = currentQuestion + 1;
-    totalQuestions.textContent = ` / ${numQuestions}`;
-    questionTitle.textContent = question.question;
-    
+    totalQuestions.textContent = `Total Questions: ${numQuestions}`;
+    questionTitle.innerHTML = `Q${currentQuestion + 1}: &nbsp; ${question.question}`;
+
     optionsContainer.innerHTML = '';
 
     options = options.sort(() => Math.random() - 0.5);
@@ -106,7 +110,7 @@ const displayQuestion = function (question) {
                 optionElement.style.color = "#2d3748";
                 showAlert('success', 'correct answer, +1 point');
                 totalScore++;
-                score.textContent = totalScore;
+                score.innerHTML = `Score : ${totalScore}`;
             } else {
                 optionElement.style.backgroundColor = "#e53e3e";
                 optionElement.style.color = "#f7fafc !important";
@@ -121,24 +125,17 @@ const displayQuestion = function (question) {
 const displayQuestions = async () => {
     try {
         const questions = await fetchQuestions();
+
         displayQuestion(questions[currentQuestion]);
 
         // Next btn
         nextButton.addEventListener('click', () => {
             currentQuestion++;
-            if (currentQuestion < questions.length + 1) {
+            if (currentQuestion < questions.length) {
                 displayQuestion(questions[currentQuestion]);
             } else {
-                setTimeout(() => {
-                    resultsDisplay();
-                }, 2000)
-                showAlert('success', 'Best of Luck!');
+                resultsDisplay();
             }
-        });
-        quitButton.addEventListener('click', () => {
-            setTimeout(() => {
-                toggleContainers();
-            }, 1000);
         });
     } catch (error) {
         console.log(error);
@@ -148,27 +145,28 @@ const displayQuestions = async () => {
 
 const resultsDisplay = function () {
     nextButton.style.display = "none";
-    customContainer.classList.remove("hidden");
+    customContainer.classList.remove("active");
     quizContainer.classList.remove("active");
     resultsContainer.classList.add("active");
     totalQuestions.textContent = numQuestions;
 
     if(totalScore === 0){
-        score.textContent = '';
+        resultScore.innerHTML = `😞 Your score is: ${totalScore}`;
     }
     else if((numQuestionsInput / totalScore) < 0.5){
-        score.textContent = `😊 Your score is: ${totalScore}`;
+        resultScore.innerHTML = `😊 Your score is: ${totalScore}`;
     }
     else{
-        score.textContent = `🥳  Your score is: ${totalScore}`;
+        resultScore.innerHTML = `🥳 Your score is: ${totalScore}`;
     }
-
+    // Play Again
     playAgainButton.addEventListener("click", () => {
-        location.reload();
+        setTimeout(() => {
+            location.reload();
+        }, 2000);
+        showAlert('success', 'Best of luck! for the new quiz.');
     });
 }
-
-
 
 // event listeners
 quizForm.addEventListener("submit", async (e) => {
@@ -194,6 +192,7 @@ const toggleContainers = () => {
     quizContainer.classList.toggle("active");
 }
 
+// Quit Quiz btn
 quitButton.addEventListener('click', () => {
     toggleContainers();
 });
@@ -203,9 +202,8 @@ window.addEventListener("load", () => {
     dropdownCategories();
 });
 
-
 //////////////////////
-/// alert messages ///
+/// alert messages /////
 //////////////////////
 
 function showAlert(type, message) {
@@ -222,9 +220,5 @@ function showAlert(type, message) {
   setTimeout(() => {
     alert.classList.add('fade-out');
     setTimeout(() => alert.remove(), 600);
-  }, 4000);
+  }, 40000);
 }
-
-// Example usage
-// showAlert('success', 'Success: Operation completed successfully!');
-// showAlert('error', 'Error: Something went wrong.');
