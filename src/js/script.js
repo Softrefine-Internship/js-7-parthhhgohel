@@ -1,26 +1,21 @@
 // write javascript here
 
-// Screen Containers
 const customContainer = document.querySelector(".custom-container");
+const quizForm = document.querySelector("#quiz-form");
 const quizContainer = document.querySelector(".quiz-container");
 const resultsContainer = document.querySelector(".results-container");
 
-// inputs
 const numQuestionsInput = document.querySelector("#num-questions");
 const categoryInput = document.querySelector("#category");
 const difficultyInput = document.querySelector("#difficulty");
 const typeInput = document.querySelector("#type");
 
-// form
-const quizForm = document.querySelector("#quiz-form");
 
-// buttons
 const startButton = document.querySelector("#start-quiz");
 const quitButton = document.querySelector("#quit-quiz");
 const nextButton = document.querySelector("#next-question");
 const playAgainButton = document.querySelector("#play-again");
 
-// elements
 const score = document.querySelector(".score");
 const questionNumber = document.querySelector(".question-number");
 const totalQuestions = document.querySelector(".total-questions");
@@ -29,8 +24,6 @@ const optionsContainer = document.querySelector(".options-container");
 const correctAnswer = document.querySelector(".correct-answer");
 const resultScore = document.querySelector(".result_score");
 const overlay = document.querySelector(".overlay");
-
-// variables
 let currentQuestion = 0;
 let totalScore = 0;
 let numQuestions;
@@ -38,7 +31,6 @@ let category;
 let difficulty;
 let type;
 
-// functions
 const fetchCategories = async function () {
     overlay.classList.remove('hidden');
     try{
@@ -128,7 +120,6 @@ const displayQuestions = async () => {
 
         displayQuestion(questions[currentQuestion]);
 
-        // Next btn
         nextButton.addEventListener('click', () => {
             currentQuestion++;
             if (currentQuestion < questions.length) {
@@ -153,13 +144,12 @@ const resultsDisplay = function () {
     if(totalScore === 0){
         resultScore.innerHTML = `😞 Your score is: ${totalScore}`;
     }
-    else if((numQuestionsInput / totalScore) < 0.5){
+    else if((totalScore / numQuestionsInput) < 0.5){
         resultScore.innerHTML = `😊 Your score is: ${totalScore}`;
     }
     else{
         resultScore.innerHTML = `🥳 Your score is: ${totalScore}`;
     }
-    // Play Again
     playAgainButton.addEventListener("click", () => {
         setTimeout(() => {
             location.reload();
@@ -168,7 +158,6 @@ const resultsDisplay = function () {
     });
 }
 
-// event listeners
 quizForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     numQuestions = numQuestionsInput.value;
@@ -186,18 +175,15 @@ quizForm.addEventListener("submit", async (e) => {
     quizContainer.classList.add("active");
 });
 
-// toggle between containers
 const toggleContainers = () => {
     customContainer.classList.toggle("hidden");
     quizContainer.classList.toggle("active");
 }
 
-// Quit Quiz btn
 quitButton.addEventListener('click', () => {
     toggleContainers();
 });
 
-// Browser Load
 window.addEventListener("load", () => {
     dropdownCategories();
 });
