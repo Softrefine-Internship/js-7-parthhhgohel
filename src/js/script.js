@@ -109,6 +109,7 @@ const displayQuestion = function (question) {
             if (option === question.correct_answer) {
                 optionElement.style.backgroundColor = "#81e6d9";
                 optionElement.style.color = "#2d3748";
+                showAlert('success', 'Correct Answer!');
                 totalScore++;
                 score.innerHTML = `Score : ${totalScore}`;
             } else {
@@ -121,6 +122,7 @@ const displayQuestion = function (question) {
                         el.style.color = "#2d3748";
                     }
                 });
+                showAlert('error', 'Wrong Answer!');
             }
             optionsContainer.querySelectorAll('.option').forEach(el => el.style.pointerEvents = 'none');
         });
