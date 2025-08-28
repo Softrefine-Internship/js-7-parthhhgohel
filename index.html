@@ -27,6 +27,10 @@
         <div class="loader"></div>
       </div>
 
+      <div class="alert-container">
+
+      </div>
+
       <section class="screen-container">
         <div class="custom-container">
           <h1 class="quiz-title-h1">GK Quiz</h1>
@@ -39,20 +43,20 @@
                 type="number"
                 id="num-questions"
                 name="num-questions"
-                min="1"
-                max="20"
                 value="5"
               />
+              <span id="error-message" class="error-message hidden"></span>
             </div>
             <div class="form-field">
               <label for="category">Select Category:</label>
               <select id="category" name="category">
-
+                <option value="">Any Category</option>
               </select>
             </div>
             <div class="form-field">
               <label for="difficulty">Select Difficulty:</label>
               <select id="difficulty" name="difficulty">
+                <option value="">Any Difficulty</option>
                 <option value="easy">Easy</option>
                 <option value="medium">Medium</option>
                 <option value="hard">Hard</option>

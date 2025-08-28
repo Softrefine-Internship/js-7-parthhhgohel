@@ -1,21 +1,28 @@
 // write javascript here
 
+// Containers
 const customContainer = document.querySelector(".custom-container");
 const quizForm = document.querySelector("#quiz-form");
 const quizContainer = document.querySelector(".quiz-container");
 const resultsContainer = document.querySelector(".results-container");
+const alertContainer = document.querySelector(".alert-container");
 
+// Inputs
 const numQuestionsInput = document.querySelector("#num-questions");
 const categoryInput = document.querySelector("#category");
 const difficultyInput = document.querySelector("#difficulty");
 const typeInput = document.querySelector("#type");
 
+// Error Message
+const errorMessage = document.querySelector("#error-message");
 
+// Buttons
 const startButton = document.querySelector("#start-quiz");
 const quitButton = document.querySelector("#quit-quiz");
 const nextButton = document.querySelector("#next-question");
 const playAgainButton = document.querySelector("#play-again");
 
+// Elements
 const score = document.querySelector(".score");
 const questionNumber = document.querySelector(".question-number");
 const totalQuestions = document.querySelector(".total-questions");
@@ -24,6 +31,8 @@ const optionsContainer = document.querySelector(".options-container");
 const correctAnswer = document.querySelector(".correct-answer");
 const resultScore = document.querySelector(".result_score");
 const overlay = document.querySelector(".overlay");
+
+// Variables
 let currentQuestion = 0;
 let totalScore = 0;
 let numQuestions;
@@ -40,7 +49,7 @@ const fetchCategories = async function () {
         return data.trivia_categories;
     }
     catch(error){
-        console.log(error);
+        // console.log(error);
         overlay.classList.add('hidden');
         showAlert('error', 'Failed to fetch categories. Please try again.');
     }
@@ -61,7 +70,7 @@ const dropdownCategories = async () => {
             categoryInput.appendChild(option);
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         showAlert('error', 'Failed to fetch categories. Please try again.');
     }
 }
@@ -69,14 +78,14 @@ const dropdownCategories = async () => {
 const fetchQuestions = async function () {
     overlay.classList.remove('hidden');
     try {
-        console.log('Fetching questions with:', numQuestions, category, difficulty, type);
+        // console.log('Fetching questions with:', numQuestions, category, difficulty, type);
         const response = await fetch(`https://opentdb.com/api.php?amount=${numQuestions}&category=${category}&difficulty=${difficulty}&type=${type}`);
         const data = await response.json();
-        console.log(data.results);
+        // console.log(data.results);
         overlay.classList.add('hidden');
         return data.results;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         overlay.classList.add('hidden');
         showAlert('error', 'Error: Something went wrong.');
     }
@@ -94,19 +103,24 @@ const displayQuestion = function (question) {
     options.forEach((option) => {
         const optionElement = document.createElement("div");
         optionElement.classList.add("option");
-        optionElement.textContent = option;
+        optionElement.innerHTML = option;
 
         optionElement.addEventListener("click", () => {
             if (option === question.correct_answer) {
                 optionElement.style.backgroundColor = "#81e6d9";
                 optionElement.style.color = "#2d3748";
-                showAlert('success', 'correct answer, +1 point');
                 totalScore++;
                 score.innerHTML = `Score : ${totalScore}`;
             } else {
                 optionElement.style.backgroundColor = "#e53e3e";
                 optionElement.style.color = "#f7fafc !important";
-                showAlert('error', 'Correct Answer is: ' + question.correct_answer);
+
+                optionsContainer.querySelectorAll('.option').forEach(el => {
+                    if (el.innerHTML === question.correct_answer) {
+                        el.style.backgroundColor = "#81e6d9";
+                        el.style.color = "#2d3748";
+                    }
+                });
             }
             optionsContainer.querySelectorAll('.option').forEach(el => el.style.pointerEvents = 'none');
         });
@@ -129,7 +143,7 @@ const displayQuestions = async () => {
             }
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         showAlert('error', 'Error: Something went wrong.');
     }
 };
@@ -144,7 +158,7 @@ const resultsDisplay = function () {
     if(totalScore === 0){
         resultScore.innerHTML = `😞 Your score is: ${totalScore}`;
     }
-    else if((totalScore / numQuestionsInput) < 0.5){
+    else if((totalScore / numQuestionsInput) > 0.5){
         resultScore.innerHTML = `😊 Your score is: ${totalScore}`;
     }
     else{
@@ -164,12 +178,18 @@ quizForm.addEventListener("submit", async (e) => {
     category = categoryInput.value;
     difficulty = difficultyInput.value;
     type = typeInput.value;
+
+    if(numQuestions < 1 || numQuestions >= 50){
+        errorMessage.classList.remove("hidden");
+        errorMessage.textContent = "Number of questions should be between 1 and 50";
+        return;
+    }
     
-    console.log('Form values:', numQuestions, category, difficulty, type);
+    // console.log('Form values:', numQuestions, category, difficulty, type);
     
     const questions = await displayQuestions();
     
-    console.log(questions);
+    // console.log(questions);
     
     customContainer.classList.add("hidden");
     quizContainer.classList.add("active");
@@ -181,7 +201,8 @@ const toggleContainers = () => {
 }
 
 quitButton.addEventListener('click', () => {
-    toggleContainers();
+    showAlert('success', 'Thanks for playing!');
+    resultsDisplay();
 });
 
 window.addEventListener("load", () => {
@@ -197,7 +218,7 @@ function showAlert(type, message) {
   alert.classList.add('alert', `alert-${type}`);
   alert.textContent = message;
 
-  document.body.appendChild(alert);
+  alertContainer.insertAdjacentElement('beforeend', alert);
 
   setTimeout(() => {
     alert.classList.add('show');
@@ -206,5 +227,5 @@ function showAlert(type, message) {
   setTimeout(() => {
     alert.classList.add('fade-out');
     setTimeout(() => alert.remove(), 600);
-  }, 40000);
+  },2000);
 }

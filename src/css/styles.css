@@ -33,6 +33,13 @@
   color: white;
 }
 
+.error-message {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--button-color-cancel);
+  font-weight: bold;
+}
+
 
 * {
   margin: 0;
@@ -387,20 +394,27 @@ body {
 }
 
 /* alert */
-.alert {
+
+.alert-container {
   position: fixed;
   top: 30px;
-  right: -100px;
+  right: 30px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alert {
+  position: relative;
   padding: 15px 25px;
   border-radius: 8px;
   font-size: 16px;
   opacity: 0;
   transition: all 0.3s ease-in-out;
-  width: auto;
   max-width: 300px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 9999;
-  display: none;
 }
 
 .alert-success {
